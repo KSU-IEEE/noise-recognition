@@ -23,8 +23,8 @@
 #include "arduinoFFT.h"
  
 #define SAMPLES 128             //SAMPLES-pt FFT. Must be a base 2 number. Max 128 for Arduino Uno.
-#define SAMPLING_FREQUENCY 2048 //Ts = Based on Nyquist, must be 2 times the highest expected frequency.
- 
+#define SAMPLING_FREQUENCY_MHZ 2048 //Ts = Based on Nyquist, must be 2 times the highest expected frequency.
+ // P = 1/f
 arduinoFFT FFT = arduinoFFT();
  
 unsigned int samplingPeriod;
@@ -36,7 +36,7 @@ double vImag[SAMPLES]; //create vector of size SAMPLES to hold imaginary values
 void setup() 
 {
     Serial.begin(115200); //Baud rate for the Serial Monitor
-    samplingPeriod = round(1000000*(1.0/SAMPLING_FREQUENCY)); //Period in microseconds 
+    samplingPeriod_ms = round(1000000*(1.0/SAMPLING_FREQUENCY_MHZ)); //Period in microseconds 
 }
  
 void loop() 
@@ -50,7 +50,7 @@ void loop()
         vImag[i] = 0; //Makes imaginary term 0 always
 
         /*remaining wait time between samples if necessary*/
-        while(micros() < (microSeconds + samplingPeriod))
+        while(micros() < (microSeconds + samplingPeriod_ms))
         {
           //do nothing
         }

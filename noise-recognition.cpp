@@ -3,7 +3,15 @@
 namespace noise_recognition{
 
 
-bool noiseRecognition::noiseRecognition(double freq){
+/*
+useage:
+
+noiseRecognition nr;
+nh.listen(); // 1.) get_sample() 2.) performFFT() 3.) hasFreq() <- return hasFreq()
+*/
+
+
+noiseRecognition::noiseRecognition(double freq){
     /*if(freq >= threshHoldValue)
     {
         return true
@@ -11,6 +19,14 @@ bool noiseRecognition::noiseRecognition(double freq){
     else{
     return false
     }*/
+}
+
+void setFreq(double val); 
+bool listen(); 
+
+bool noiseRecognition::hasFreq() {
+    // line 65
+    // check if double peak is within a tolerance (class variable)
 }
 
 void noiseRecognition::performFFT(){
@@ -21,12 +37,29 @@ void noiseRecognition::performFFT(){
     FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
 }
 
-void noiseRecognition::setSamples(){
+// return vector
+void noiseRecognition::getSamples(){
 //set global FFT variable to value obtained from getSample
-}
+// lines 45 - 57
 
-double noiseRecognition::getSamples(){
-// get input from Mic
-// assign value to global decimal number
-    return Samples;
+/*
+wave = r * cos(T + phi) + i * sin(T + phi)
+            i
+            |
+            |
+            |
+            |         
+------------*-------------r
+            |
+            |
+            |
+            |
+Sample - array of i and array of r 
+Sample Frequency - how often you save i and r 
+
+Sample frequency = 20,000
+const int FS_HZ = 20000;  // samping frequency
+const int SAMP_PERIOD_US = (1 / FS_HZ) * 10000000// sampling period
+while(micros() <= (microSeconds + SAMP_PERIOD_US))
+*/
 }
