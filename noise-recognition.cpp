@@ -27,19 +27,50 @@ noiseRecognition::noiseRecognition(double freq){
 //void setFreq(double val); 
 
 
+/*
+EXAMPLE
+in an ino 
+noiseRecognition nr = noiseRecognition();
 
-bool listen()
+noiseRecognition nr = new noiseRecognition(3200);
+*/
+noiseRecognition::noiseRecognition() {
+    var_ = 30;
+}
+
+
+// noiseRecognition::noiseRecognition(float variance) {
+//     var_ = variance;
+// }
+
+// noiseRecognition::noiseRecognition(float variance, float targetFrequency) {
+//     noiseRecognition(variance);
+//     targetF_ = targetFrequency;
+// }
+
+noiseRecognition::noiseRecognition(pin AnalogPin, float variance, float targetFrequency) {
+    noiseRecognition(variance);
+    targetF_ = targetFrequency;
+}
+
+bool noiserecognition::listenFor(float frequency)
 {
-arduinoFFT samples = getSamples();
-bool existingFreq = hasFreq(samples);
-return existingFreq;
+    /*
+    1. getSamples 
+        returns an FFT object 
+    2. hasFreq
+
+    */
+    getSamples();
+    bool existingFreq = hasFreq(frequency);
+    return existingFreq;
 } 
 
-bool noiseRecognition::hasFreq(arduinoFFT FFT) {
+bool noiseRecognition::hasFreq(float targetFreq) {
     // line 65
     // check if double peak is within a tolerance (class variable)
-     double peak = FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
-     if (peak > 0)
+     double peak = FFT.MajorPeak(vReal, samples_, SAMPLING_FREQUENCY);
+     if (targetFreq <= peak + var_ || targetFreq >= peak + var_ ))
      {
          return true;
      }
@@ -53,22 +84,38 @@ bool noiseRecognition::hasFreq(arduinoFFT FFT) {
     //Need to find a way to iterate
     
     
-}
+// }
 
 // return vector
 void noiseRecognition::getSamples(){
 //set global FFT variable to value obtained from getSample
 // lines 45 - 57
 //getting fft value
-arduinoFFT FFT = arduinoFFT();
+
+// runs for 5 second incrememts
+
+FFT = new arduinoFFT();
 for (int i = 0; i < sizeOf(vReal); ++i)
     {
-    vReal[i] = analogRead(0);
+    vReal[i] = analogRead(PIN);
     vImag[i] = 0;
+
+
+    while(micros() < (microSeconds + samplingPeriod_ms))
+        {
+          //do nothing
+        }
+
+    /*
+    t of the foor loop = 1 / samplingPeriod * sizeOf(vReal)
+    t = 5 s
+
+    samplingPeriod 10,000 hz 
+    */
+    }
     FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
     FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
     FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
-    }
 /*
 wave = r * cos(T + phi) + i * sin(T + phi)
             i

@@ -1,8 +1,8 @@
-#include <arduinoFFT.h>
+// #include <arduinoFFT.h>
 #ifndef NOISE_RECOGNITION_H
 #define NOISE_RECOGNITION_H
-#include <Vector.h>
-// #include <arduinoFFT>
+#include <Arduino.h>
+#include <arduinoFFT.h>
 
 namespace noise_recognition{
 
@@ -10,7 +10,9 @@ class noiseRecognition {
 	
 	public:
 	noiseRecognition();
-	~noiseRecognition();
+	// noiseRecognition(float variance);
+	// noiseRecognition(float variance, float targetFrequency);
+	~noiseRecognition(){};
 
 	
 	void performFFT();
@@ -24,8 +26,10 @@ class noiseRecognition {
 	void setSamples(int sample) {samples_ =sample;}
 	int getSamples() {return samples_;}
 	private:
+	pin micPin_;
 	int lower_freq;
-	int samples_ = 128;
+	int samples_ = 128;  // 5 s = 1 / SamplingFrequency * samples_
+						 // samples_ = 5 * SamplingFrequency
  	int SAMPLING_FREQUENCY = 2048;
 
 arduinoFFT FFT = arduinoFFT();
