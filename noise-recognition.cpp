@@ -3,16 +3,13 @@
 #include <math.h> 
 namespace noise_recognition{
 
-double vReal[SAMPLES_]; //create vector of size SAMPLES to hold real values
-double vImag[SAMPLES_]; //create vector of size SAMPLES to hold imaginary values
+
 
 /*
 useage:
 noiseRecognition nr;
 nh.listen(); // 1.) get_sample() 2.) performFFT() 3.) hasFreq() <- return hasFreq()
-
 Commented out stuff:
-
 noiseRecognition::noiseRecognition(double freq){
     /*if(freq >= threshHoldValue)
     {
@@ -31,7 +28,6 @@ noiseRecognition::noiseRecognition(double freq){
 EXAMPLE
 in an ino 
 noiseRecognition nr = noiseRecognition();
-
 noiseRecognition nr = new noiseRecognition(3200);
 */
 noiseRecognition::noiseRecognition() {
@@ -59,7 +55,6 @@ bool noiserecognition::listenFor(float frequency)
     1. getSamples 
         returns an FFT object 
     2. hasFreq
-
     */
     getSamples();
     bool existingFreq = hasFreq(frequency);
@@ -79,12 +74,6 @@ bool noiseRecognition::hasFreq(float targetFreq) {
      }
 }
 
-//void noiseRecognition::performFFT(){
-    //FFT must be global variable
-    //Need to find a way to iterate
-    
-    
-// }
 
 // return vector
 void noiseRecognition::getSamples(){
@@ -94,28 +83,28 @@ void noiseRecognition::getSamples(){
 
 // runs for 5 second incrememts
 
+}
 FFT = new arduinoFFT();
 for (int i = 0; i < sizeOf(vReal); ++i)
     {
     vReal[i] = analogRead(PIN);
     vImag[i] = 0;
 
-
-    while(micros() < (microSeconds + samplingPeriod_ms))
+    float start_time = micros();
+    while(micros() - start_time < samplingPeriod))
         {
-          //do nothing
+        FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+        FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
+        FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
         }
 
     /*
-    t of the foor loop = 1 / samplingPeriod * sizeOf(vReal)
+    t of the for loop = 1 / samplingPeriod * sizeOf(vReal)
     t = 5 s
-
     samplingPeriod 10,000 hz 
     */
     }
-    FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-    FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
-    FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
+ 
 /*
 wave = r * cos(T + phi) + i * sin(T + phi)
             i
