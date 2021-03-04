@@ -20,6 +20,8 @@ class noiseRecognition {
 	
 	private:
 
+	float variance_;
+
 	int lower_freq;		
 	const static long SAMPLING_FREQUENCY = 10000;
 	const static int samples_ = (((1/SAMPLING_FREQUENCY) * 5) * 1000000);
@@ -35,26 +37,8 @@ class noiseRecognition {
 
 #endif //NOISE_RECOGNITION_H
 
-Arduino: 1.8.13 (Windows Store 1.8.42.0) (Windows 10), Board: "Arduino Uno"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Arduino: 1.8.13 (Windows Store 1.8.42.0) (Windows 10), Board: "Arduino Uno"
+/*
 
 
 C:\Users\Jordan Halim\Documents\Arduino\libraries\noise-recognition\noise-recognition.cpp: In constructor 'noise_recognition::noiseRecognition::noiseRecognition()':
@@ -130,3 +114,4 @@ Error compiling for board Arduino Uno.
 This report would have more information with
 "Show verbose output during compilation"
 option enabled in File -> Preferences.
+*/

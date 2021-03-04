@@ -31,7 +31,7 @@ noiseRecognition nr = noiseRecognition();
 noiseRecognition nr = new noiseRecognition(3200);
 */
 noiseRecognition::noiseRecognition() {
-    var_ = 30;
+    variance_ = 30;
 }
 
 
@@ -65,7 +65,7 @@ bool noiseRecognition::hasFreq(float targetFreq) {
     // line 65
     // check if double peak is within a tolerance (class variable)
      double peak = FFT.MajorPeak(vReal, samples_, SAMPLING_FREQUENCY);
-     if (targetFreq <= peak + var_ || targetFreq >= peak + var_ ))
+     if (targetFreq <= peak + variance_ || targetFreq >= peak + variance_ ))
      {
          return true;
      }
