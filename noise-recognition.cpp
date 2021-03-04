@@ -2,7 +2,7 @@
 #include <arduinoFFT.h>
 #include <math.h> 
 namespace noise_recognition{
-
+#include <Arduino.h>
 
 
 /*
@@ -44,12 +44,14 @@ noiseRecognition::noiseRecognition() {
 //     targetF_ = targetFrequency;
 // }
 
-noiseRecognition::noiseRecognition(pin AnalogPin, float variance, float targetFrequency) {
-    noiseRecognition(variance);
+noiseRecognition::noiseRecognition(int AnalogPin, float variance, float targetFrequency) {
+   // noiseRecognition(variance);
+    variance_ = variance;
     targetF_ = targetFrequency;
+    pin_ = AnalogPin;
 }
 
-bool noiserecognition::listenFor(float frequency)
+bool noiseRecognition::listenFor(float frequency)
 {
     /*
     1. getSamples 
@@ -65,7 +67,7 @@ bool noiseRecognition::hasFreq(float targetFreq) {
     // line 65
     // check if double peak is within a tolerance (class variable)
      double peak = FFT.MajorPeak(vReal, samples_, SAMPLING_FREQUENCY);
-     if (targetFreq <= peak + variance_ || targetFreq >= peak + variance_ ))
+     if (targetFreq <= peak + variance_ || targetFreq >= peak + variance_ )
      {
          return true;
      }
@@ -82,20 +84,18 @@ void noiseRecognition::getSamples(){
 //getting fft value
 
 // runs for 5 second incrememts
-
-}
-FFT = new arduinoFFT();
-for (int i = 0; i < sizeOf(vReal); ++i)
+    FFT = arduinoFFT();
+for (int i = 0; i < samples_; ++i)
     {
-    vReal[i] = analogRead(PIN);
+    vReal[i] = pin_;
     vImag[i] = 0;
 
     float start_time = micros();
-    while(micros() - start_time < samplingPeriod))
+    while(micros() - start_time < samplingPeriod)
         {
-        FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-        FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
-        FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
+        FFT.Windowing(vReal, samples_, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+        FFT.Compute(vReal, vImag, samples_, FFT_FORWARD);
+        FFT.ComplexToMagnitude(vReal, vImag, samples_);
         }
 
     /*
@@ -104,6 +104,9 @@ for (int i = 0; i < sizeOf(vReal); ++i)
     samplingPeriod 10,000 hz 
     */
     }
+
+}
+
  
 /*
 wave = r * cos(T + phi) + i * sin(T + phi)
