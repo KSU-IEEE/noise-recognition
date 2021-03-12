@@ -27,13 +27,13 @@ class noiseRecognition {
 	float targetF_;
 	int pin_;
 	int lower_freq;		
-	const static long SAMPLING_FREQUENCY = 10000;
+	const static long SAMPLING_FREQUENCY = 5000;
 	const static int samples_ = (((1/SAMPLING_FREQUENCY) * 5) * 1000000);
  
  	double vReal[samples_]; 
 	double vImag[samples_]; 
 	arduinoFFT FFT = arduinoFFT();
-	const static unsigned long samplingPeriod = 5000000;
+	const static unsigned long samplingPeriod = 1 / SAMPLING_FREQUENCY;
 	unsigned long microSeconds;
 
 };
