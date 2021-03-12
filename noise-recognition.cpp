@@ -49,6 +49,8 @@ noiseRecognition::noiseRecognition(int AnalogPin, float variance, float targetFr
     variance_ = variance;
     targetF_ = targetFrequency;
     pin_ = AnalogPin;
+
+    // pinMode(pin_, INPUT);
 }
 
 bool noiseRecognition::listenFor(float frequency)
@@ -58,15 +60,19 @@ bool noiseRecognition::listenFor(float frequency)
         returns an FFT object 
     2. hasFreq
     */
+//    Serial.print("about to listen");
     getSamples();
     bool existingFreq = hasFreq(frequency);
+    // Seria.print("About to get")
     return existingFreq;
 } 
 
 bool noiseRecognition::hasFreq(float targetFreq) {
     // line 65
     // check if double peak is within a tolerance (class variable)
-     double peak = FFT.MajorPeak(vReal, samples_, SAMPLING_FREQUENCY);
+     float peak = FFT.MajorPeak(vReal, samples_, SAMPLING_FREQUENCY);
+     Serial.println("found signal: ");
+     Serial.println(peak);
      if (targetFreq <= peak + variance_ || targetFreq >= peak + variance_ )
      {
          return true;
@@ -85,18 +91,24 @@ void noiseRecognition::getSamples(){
 
 // runs for 5 second incrememts
     FFT = arduinoFFT();
+    // Serial.println("about to take samples");
 for (int i = 0; i < samples_; ++i)
     {
-    vReal[i] = pin_;
+    vReal[i] = analogRead(pin_);
     vImag[i] = 0;
 
     float start_time = micros();
+
+    FFT.Windowing(vReal, samples_, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+    FFT.Compute(vReal, vImag, samples_, FFT_FORWARD);
+    FFT.ComplexToMagnitude(vReal, vImag, samples_);
+
+
     while(micros() - start_time < samplingPeriod)
         {
-        FFT.Windowing(vReal, samples_, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-        FFT.Compute(vReal, vImag, samples_, FFT_FORWARD);
-        FFT.ComplexToMagnitude(vReal, vImag, samples_);
+        
         }
+    
 
     /*
     t of the for loop = 1 / samplingPeriod * sizeOf(vReal)
@@ -105,6 +117,7 @@ for (int i = 0; i < samples_; ++i)
     */
     }
 
+    // Serial.println("taken samples");
 }
 
  
